@@ -44,6 +44,7 @@ Edite as definições para refletir os dados reais:
 - `\projecttitle{...}`: Nome do projeto global.
 - `\finalclient{...}`: Nome do cliente final (ex: Petrobras), exibido na folha de rosto.
 - `\author{Nome}{Sobrenome}`: Autor principal do documento.
+- `\coordinatorsignature{...}`: Caminho para a imagem da assinatura do coordenador (ex: `metadatas/signatures/assinatura.pdf`).
 - `\authorreport{Sigla}{Nome Completo}{Título}`: Cadastro para página de assinaturas.
 
 ### 2. Gestão de Laboratórios e Logos

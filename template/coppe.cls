@@ -98,6 +98,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
 \newcommand\interlocutor[1]{\global\def\@interlocutor{#1}}
 \newcommand\finalclient[1]{\global\def\@finalclient{#1}}
 \newcommand\projecttitle[1]{\global\def\@projecttitle{#1}}
+\newcommand\coordinatorsignature[1]{\global\def\@coordinatorsignature{#1}}
 \global\def\@coordinator{Nome do Coordenador}
 \global\def\@subcoordinator{Nome do Subcoordenador}
 \global\def\@finalclient{Petrobras}
@@ -106,6 +107,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
 \global\def\@projectdepartment{Departamento}
 \global\def\@projecttitle{TÍTULO DO PROJETO}
 \global\def\@reportcode{Código do Relatório}
+\global\def\@coordinatorsignature{template/logos/signature.pdf}
 
 \def\@makechapterhead#1{%
   {\parindent \z@ \raggedright \normalfont
@@ -309,7 +311,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \vspace{2cm}
   \begin{center}
       \centering
-      \includegraphics[width=0.6\linewidth]{template/logos/signature.pdf}\\[-45pt]
+      \includegraphics[width=0.6\linewidth]{\@coordinatorsignature}\\[-45pt]
       \rule{10cm}{0.4pt}\\
       \vspace{0.2cm}
       \textbf{\@coordinator}\\
