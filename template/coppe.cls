@@ -74,10 +74,11 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \global\advance\@authorreportcount by 1
 }
 \newcount\@laboratorycount\@laboratorycount0
-\newcommand\laboratory[3]{%
+\newcommand\laboratory[4]{%
   \global\@namedef{CoppeLaboratoryName:\the\@laboratorycount}{#1}
   \global\@namedef{CoppeLaboratoryAcronym:\the\@laboratorycount}{#2}
   \global\@namedef{CoppeLaboratoryLogo:\the\@laboratorycount}{#3}
+  \global\@namedef{CoppeLaboratoryLogoWidth:\the\@laboratorycount}{#4}
   \global\advance\@laboratorycount by 1
 }
 \renewcommand\author[2]{%
@@ -95,9 +96,11 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
 \newcommand\reportversion[1]{\global\def\@reportversion{#1}}
 \newcommand\cooperationterm[1]{\global\def\@cooperationterm{#1}}
 \newcommand\interlocutor[1]{\global\def\@interlocutor{#1}}
+\newcommand\finalclient[1]{\global\def\@finalclient{#1}}
 \newcommand\projecttitle[1]{\global\def\@projecttitle{#1}}
 \global\def\@coordinator{Nome do Coordenador}
 \global\def\@subcoordinator{Nome do Subcoordenador}
+\global\def\@finalclient{Petrobras}
 \global\def\@projectduration{Duração do Projeto}
 \global\def\@projectphase{Fase Associada}
 \global\def\@projectdepartment{Departamento}
@@ -174,7 +177,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \clearpage
   \makeauthorspage
   \clearpage
-  \makelaboratorypage
+  %\makelaboratorypage
   \clearpage
   \makelaboratorylogopage
   \clearpage
@@ -290,7 +293,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \begin{tabularx}{\textwidth}{|l|X|}
     \hline
     \textbf{Coordenador} & \@coordinator \\ \hline
-    \textbf{Subcoordenador} & \@subcoordinator \\ \hline
+    %\textbf{Subcoordenador} & \@subcoordinator \\ \hline
     \textbf{Código do relatório} & \@reportcode \\ \hline
     \textbf{Versão do relatório} & \@reportversion \\ \hline
     \textbf{Número do projeto Coppetec} & \@coppetecproject \\ \hline
@@ -299,7 +302,8 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
     \textbf{Interlocutor} & \@interlocutor \\ \hline
     \textbf{Fase associada} & \@projectphase \\ \hline
     \textbf{Duração do projeto} & \@projectduration \\ \hline
-    \textbf{Departamento} & \@projectdepartment \\ \hline
+    %\textbf{Departamento} & \@projectdepartment \\ \hline
+    \textbf{Cliente final} & \@finalclient \\ \hline
   \end{tabularx}  \vspace{0.5cm}
 
   \vspace{2cm}
@@ -326,11 +330,33 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
 %
 \newcommand\makelaboratorylogopage{%
   \thispagestyle{plain}
+
+  % Head of the page
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north west, xshift=2cm, yshift=-1.5cm] at (current page.north west) {
+        \begin{tabular}{@{}l@{\hspace{0.5cm}}l@{}}
+            \includegraphics[height=1.5cm]{template/logos/LPS_signal_blue.pdf} & 
+            \begin{tabular}[b]{@{}l@{}} 
+                \textbf{\footnotesize \textcolor{myblue}{Laboratório de Processamento de Sinais - LPS/COPPE}} \\ 
+                \textbf{\footnotesize \textcolor{myblue}{Universidade Federal do Rio de Janeiro}} \\
+                \textbf{\footnotesize \textcolor{myblue}{\local@cityname, \number\day\ de \local@monthname\ de \number\year}}
+            \end{tabular}
+        \end{tabular}
+    };
+  \end{tikzpicture}
+
+  \vspace{2cm}
+
   \begin{center}
-    \vspace*{1cm}
-    {\Large\bfseries LABORATÓRIOS E LOGOMARCAS}
-    \vspace{2cm}
-    
+    \sloppy\nohyphens{\MakeUppercase\local@title}\par
+    \vspace*{7mm}
+  \end{center}\par
+  
+  \noindent Este relatório foi desenvolvido em regime de colaboração técnico-científica entre os seguintes laboratórios:
+  \vspace{1cm}
+  
+  \begin{center}
+
     \gdef\lablogorows{}
     \count1=0
     \def\do@lablogoloop{%
@@ -338,25 +364,36 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
         \edef\temp@labname{\csname CoppeLaboratoryName:\the\count1\endcsname}%
         \edef\temp@labacro{\csname CoppeLaboratoryAcronym:\the\count1\endcsname}%
         \edef\temp@lablogo{\csname CoppeLaboratoryLogo:\the\count1\endcsname}%
-        \xappto\lablogorows{\temp@labname\ (\temp@labacro) & }%
+        \edef\temp@labwidth{\csname CoppeLaboratoryLogoWidth:\the\count1\endcsname}%
+        % Build the row expanding the current values
         \ifx\temp@lablogo\empty
+          \edef\nextrow{\noexpand\rule[-1.1cm]{0pt}{2.2cm}\noexpand\begin{minipage}[c]{\noexpand\linewidth}\noexpand\centering \temp@labname\ (\temp@labacro)\noexpand\end{minipage} & --- \noexpand\\ \noexpand\hline}%
         \else
-          \xappto\lablogorows{\noexpand\includegraphics[height=1cm]{\temp@lablogo}}%
+          \edef\nextrow{\noexpand\rule[-1.1cm]{0pt}{2.2cm}\noexpand\begin{minipage}[c]{\noexpand\linewidth}\noexpand\centering \temp@labname\ (\temp@labacro)\noexpand\end{minipage} & $\vcenter{\hbox{\noexpand\includegraphics[width=\temp@labwidth\noexpand\linewidth, keepaspectratio]{\temp@lablogo}}}$ \noexpand\\ \noexpand\hline}%
         \fi
-        \gappto\lablogorows{\\ \hline}%
+        \toks0=\expandafter{\lablogorows}%
+        \toks1=\expandafter{\nextrow}%
+        \xdef\lablogorows{\the\toks0 \the\toks1}%
         \advance\count1 by 1
         \expandafter\do@lablogoloop
       \fi
     }%
     \do@lablogoloop
-
-    \renewcommand{\arraystretch}{2.5}
-    \begin{tabularx}{\textwidth}{|X|c|}
+    
+    \begingroup
+    \renewcommand{\tabularxcolumn}[1]{m{##1}}
+    \begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}m{5cm}|}
       \hline
       \textbf{Nome do Laboratório} & \textbf{Logomarca} \\ \hline
       \lablogorows
     \end{tabularx}
+    \endgroup
   \end{center}
+
+  \begin{tikzpicture}[remember picture, overlay]
+    \path (current page.east) ++(-1.5cm, 0) node[rotate=90, font=\large] {\MakeUppercase{Universidade Federal do Rio de Janeiro}};
+    \node[anchor=south, yshift=1.5cm] at (current page.south) {\includegraphics[width=0.4\linewidth]{template/logos/ufrj_horizontal.pdf}};
+  \end{tikzpicture}
 }
 
 %
